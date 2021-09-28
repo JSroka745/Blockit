@@ -33,14 +33,21 @@
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/drawable/ic_menu_camera.xml" value="0.3365740740740741" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.3365740740740741" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/activity_main.xml" value="0.2504528985507246" />
+        <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/app_bar_main.xml" value="0.1587962962962963" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/app_intro1.xml" value="0.2504528985507246" />
+        <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/app_intro2.xml" value="0.1587962962962963" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/app_intro3.xml" value="0.2504528985507246" />
+        <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/blokced_item_app.xml" value="0.1587962962962963" />
+        <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/category_item.xml" value="0.1736111111111111" />
+        <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/content_main.xml" value="0.1587962962962963" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/fragment_app_info.xml" value="0.2504528985507246" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/fragment_category_info.xml" value="0.2504528985507246" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/fragment_home.xml" value="0.2504528985507246" />
+        <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/fragment_kategorie.xml" value="0.1736111111111111" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/fragment_multi_choose.xml" value="0.2504528985507246" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/fragment_zablokowane.xml" value="0.2504528985507246" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/header.xml" value="0.2504528985507246" />
+        <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/item_app.xml" value="0.1587962962962963" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/item_in_multichoose.xml" value="0.2504528985507246" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/layout/nav_header_main.xml" value="0.2504528985507246" />
         <entry key="..\:/Users/SynMl/AndroidStudioProjects/blockit/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3365740740740741" />

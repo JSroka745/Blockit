@@ -23,7 +23,9 @@
         android:roundIcon="@drawable/baselogo"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApp">
-
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2281213420760655~2145603104"/>
 
 
         <activity android:name=".LockScreen" />
@@ -66,5 +68,7 @@
             </intent-filter>
         </activity>
     </application>
+
+
 
 </manifest>

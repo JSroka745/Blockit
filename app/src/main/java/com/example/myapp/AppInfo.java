@@ -20,6 +20,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -43,6 +44,15 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.myapp.ui.home.HomeFragment;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,6 +60,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.ContentValues.TAG;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +88,10 @@ public class AppInfo extends Fragment {
     PackageInfo klikneta_appka;
     String text;
     TextToSpeech tts;
+    private static final String AD_UNIT_ID = "ca-app-pub-2281213420760655/8519439761";
+    private InterstitialAd interstitialAd;
+
+
     public AppInfo() {
         // Required empty public constructor
 
@@ -105,6 +120,76 @@ public class AppInfo extends Fragment {
     public interface OnAppInfoListener {
         void messageFromAppifo(String text);
     }
+    public void loadAd() {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        InterstitialAd.load(
+                mContext,
+                "ca-app-pub-2281213420760655/8519439761",
+                adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        // The mInterstitialAd reference will be null until
+                        // an ad is loaded.
+                        AppInfo.this.interstitialAd = interstitialAd;
+                        Log.i(TAG, "onAdLoaded");
+                        Toast.makeText(mContext, "onAdLoaded()", Toast.LENGTH_SHORT).show();
+                        showInterstitial();
+                        interstitialAd.setFullScreenContentCallback(
+                                new FullScreenContentCallback() {
+                                    @Override
+                                    public void onAdDismissedFullScreenContent() {
+                                        // Called when fullscreen content is dismissed.
+                                        // Make sure to set your reference to null so you don't
+                                        // show it a second time.
+                                        AppInfo.this.interstitialAd = null;
+                                        Log.d("TAG", "The ad was dismissed.");
+                                    }
+
+                                    @Override
+                                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                        // Called when fullscreen content failed to show.
+                                        // Make sure to set your reference to null so you don't
+                                        // show it a second time.
+                                        AppInfo.this.interstitialAd = null;
+                                        Log.d("TAG", "The ad failed to show.");
+                                    }
+
+                                    @Override
+                                    public void onAdShowedFullScreenContent() {
+                                        // Called when fullscreen content is shown.
+                                        Log.d("TAG", "The ad was shown.");
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error
+                        Log.i(TAG, loadAdError.getMessage());
+                        interstitialAd = null;
+
+                        String error =
+                                String.format(
+                                        "domain: %s, code: %d, message: %s",
+                                        loadAdError.getDomain(), loadAdError.getCode(), loadAdError.getMessage());
+                        Toast.makeText(
+                                mContext, "onAdFailedToLoad() with error: " + error, Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+    }
+
+    private void showInterstitial() {
+        // Show the ad if it's ready. Otherwise toast and restart the game.
+        if (interstitialAd != null) {
+            interstitialAd.show(getActivity());
+        } else {
+            Toast.makeText(mContext, "Ad did not load", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
 
     @Override
     public void onDetach() {
@@ -117,18 +202,17 @@ public class AppInfo extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       mContext=getActivity();
+        mContext = getActivity();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             //  mParam2 = getArguments().get
             // mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        tts=new TextToSpeech(mContext, new TextToSpeech.OnInitListener() {
+        tts = new TextToSpeech(mContext, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if(status!=TextToSpeech.ERROR)
-                {
+                if (status != TextToSpeech.ERROR) {
                     tts.setLanguage(new Locale("pl"));
                     tts.setSpeechRate((float) 0.7);
                 }
@@ -136,8 +220,9 @@ public class AppInfo extends Fragment {
 
 
         });
-    }
 
+
+    }
 
     public void make_alert(String title,String message)
     {
@@ -376,6 +461,13 @@ public class AppInfo extends Fragment {
         ikona.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MobileAds.initialize(mContext, new OnInitializationCompleteListener() {
+                    @Override
+                    public void onInitializationComplete(InitializationStatus initializationStatus) {}
+                });
+
+                loadAd();
+
 
                 try {
                     klikneta_appka=pm.getPackageInfo(mParam1,0);
@@ -626,6 +718,7 @@ public class AppInfo extends Fragment {
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
+
 
 
             }

@@ -181,9 +181,9 @@ public class MyService extends Service implements View.OnTouchListener  {
                     }
                     String currentApp = getForegroundApp();
 
-                    Log.i("xxx", "current_app: " + currentApp);
+                   // Log.i("xxx", "current_app: " + currentApp);
                     for (int i = 0; i < array_data.size(); i++) {
-                        Log.i("xxx1", String.valueOf(array_data.get(i).packagename));
+                       // Log.i("xxx1", String.valueOf(array_data.get(i).packagename));
                     }
                     for (int i = 0; i < array_data.size(); i++) {
                         Calendar mcurrentTime = Calendar.getInstance();

@@ -1,5 +1,7 @@
 package com.example.myapp;
 
+import static android.content.ContentValues.TAG;
+
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
@@ -30,12 +33,28 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.myapp.guide.AppIntroActivity;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
     int REQUEST_ID_MULTIPLE_PERMISSIONS =1;
     public boolean isFirstStart;
+    private InterstitialAd interstitialAd;
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -50,6 +69,74 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStackImmediate();
         }
 
+    }
+
+
+
+    public void loadAd() {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        InterstitialAd.load(
+                getApplicationContext(),
+                "ca-app-pub-2281213420760655/8519439761",
+                adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        // The mInterstitialAd reference will be null until
+                        // an ad is loaded.
+                        MainActivity.this.interstitialAd = interstitialAd;
+                        Log.i("xxx", "onAdLoaded");
+                        // Toast.makeText(mContext, "onAdLoaded()", Toast.LENGTH_SHORT).show();
+                        //showInterstitial();
+                        interstitialAd.setFullScreenContentCallback(
+                                new FullScreenContentCallback() {
+                                    @Override
+                                    public void onAdDismissedFullScreenContent() {
+                                        // Called when fullscreen content is dismissed.
+                                        // Make sure to set your reference to null so you don't
+                                        // show it a second time.
+                                        MainActivity.this.interstitialAd = null;
+                                        Log.i("xxx", "The ad was dismissed.");
+                                    }
+
+                                    @Override
+                                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                        // Called when fullscreen content failed to show.
+                                        // Make sure to set your reference to null so you don't
+                                        // show it a second time.
+
+                                        MainActivity.this.interstitialAd = null;
+                                        Log.i("xxx", "The ad failed to show.");
+                                    }
+
+                                    @Override
+                                    public void onAdShowedFullScreenContent() {
+                                        // Called when fullscreen content is shown.
+                                        Log.i("xxx", "The ad was shown.");
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error
+                        Log.i("xxx", loadAdError.getMessage());
+                        interstitialAd = null;
+
+
+
+                    }
+                });
+    }
+
+    private void showInterstitial() {
+        // Show the ad if it's ready. Otherwise toast and restart the game.
+        if (interstitialAd != null) {
+            interstitialAd.show(this);
+        } else {
+
+
+        }
     }
 
 
@@ -105,6 +192,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        loadAd();
+        ScheduledExecutorService scheduler =
+                Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(new Runnable() {
+
+            public void run() {
+                Log.i("xxx", "executor");
+                runOnUiThread(new Runnable() {
+                    public void run() {
+
+                        showInterstitial();
+                        loadAd();
+
+                    }
+                });
+
+            }
+        }, 20, 30, TimeUnit.SECONDS);
+
+
+
 
         Category_data dd= new Category_data();
         SharedPreferences sharedPreferences =
