@@ -210,14 +210,21 @@ public class MultiChoose extends Fragment implements Serializable {
                 }
 
 
-                int count = getActivity().getSupportFragmentManager().getBackStackEntryCount();
+             //   int count = getActivity().getSupportFragmentManager().getBackStackEntryCount();
 
-                if (count == 0) {
+                HomeFragment z=new HomeFragment();
+                getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(((ViewGroup)getView().getParent()).getId(), z);
+                fragmentTransaction.commit();
+
+              /*  if (count == 0) {
                     getActivity().onBackPressed();
                     //additional code
                 } else {
                     getActivity().getSupportFragmentManager().popBackStack();
-                }
+                }*/
 
 
 

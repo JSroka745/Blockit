@@ -120,75 +120,9 @@ public class AppInfo extends Fragment {
     public interface OnAppInfoListener {
         void messageFromAppifo(String text);
     }
-    public void loadAd() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-        InterstitialAd.load(
-                mContext,
-                "ca-app-pub-2281213420760655/8519439761",
-                adRequest,
-                new InterstitialAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                        // The mInterstitialAd reference will be null until
-                        // an ad is loaded.
-                        AppInfo.this.interstitialAd = interstitialAd;
-                        Log.i(TAG, "onAdLoaded");
-                        Toast.makeText(mContext, "onAdLoaded()", Toast.LENGTH_SHORT).show();
-                        showInterstitial();
-                        interstitialAd.setFullScreenContentCallback(
-                                new FullScreenContentCallback() {
-                                    @Override
-                                    public void onAdDismissedFullScreenContent() {
-                                        // Called when fullscreen content is dismissed.
-                                        // Make sure to set your reference to null so you don't
-                                        // show it a second time.
-                                        AppInfo.this.interstitialAd = null;
-                                        Log.d("TAG", "The ad was dismissed.");
-                                    }
 
-                                    @Override
-                                    public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                        // Called when fullscreen content failed to show.
-                                        // Make sure to set your reference to null so you don't
-                                        // show it a second time.
-                                        AppInfo.this.interstitialAd = null;
-                                        Log.d("TAG", "The ad failed to show.");
-                                    }
 
-                                    @Override
-                                    public void onAdShowedFullScreenContent() {
-                                        // Called when fullscreen content is shown.
-                                        Log.d("TAG", "The ad was shown.");
-                                    }
-                                });
-                    }
 
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        // Handle the error
-                        Log.i(TAG, loadAdError.getMessage());
-                        interstitialAd = null;
-
-                        String error =
-                                String.format(
-                                        "domain: %s, code: %d, message: %s",
-                                        loadAdError.getDomain(), loadAdError.getCode(), loadAdError.getMessage());
-                        Toast.makeText(
-                                mContext, "onAdFailedToLoad() with error: " + error, Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                });
-    }
-
-    private void showInterstitial() {
-        // Show the ad if it's ready. Otherwise toast and restart the game.
-        if (interstitialAd != null) {
-            interstitialAd.show(getActivity());
-        } else {
-            Toast.makeText(mContext, "Ad did not load", Toast.LENGTH_SHORT).show();
-
-        }
-    }
 
 
     @Override
@@ -461,12 +395,9 @@ public class AppInfo extends Fragment {
         ikona.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MobileAds.initialize(mContext, new OnInitializationCompleteListener() {
-                    @Override
-                    public void onInitializationComplete(InitializationStatus initializationStatus) {}
-                });
 
-                loadAd();
+
+
 
 
                 try {
